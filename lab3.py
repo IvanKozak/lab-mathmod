@@ -16,9 +16,9 @@ length = 0.1  # m
 # розрахунок середньої теплоємності через лінійний закон
 fit_lambda = np.polyfit([300, 800], therm_conduct, 1)
 lambda_line = np.poly1d(fit_lambda)
-thermcon = lambda_line(np.mean([T_spec, T_furn]))
+thermcon = lambda_line(np.mean([T_specimen, T_furnace]))
 
-a = thermcon / (hcap_av * density)
+a = thermcon / (heat_capacity_mean * density)
 
 # coord step
 N = np.arange(0, 3)
@@ -28,18 +28,18 @@ h = radius / len(N)
 tau = (h ** 2) / (2 * a)
 
 # time steps count
-M = int(t_heat / tau)
+M = int(heat_time / tau)
 M = np.arange(0, M)
 # finding f
 f = (a * tau) / (h ** 2)
 
 # Введення початкових умов
-T_arr = np.full((len(M), len(N)), T_spec)
+T_arr = np.full((len(M), len(N)), T_specimen)
 
 # розрахунок масиву T_arr
 bi = 1 - 2 * f
 nested_k1 = (1 - 2 * f * (1 + alpha * h / thermcon))
-nested_k2 = 2 * f * T_furn * alpha * h / thermcon
+nested_k2 = 2 * f * T_furnace * alpha * h / thermcon
 for j in M[1::]:
 
     # розраховуємо температури в граничних точках
